@@ -13,11 +13,10 @@ drone1_params = containers.Map({'mass','armLength','Ixx','Iyy','Izz'}, ...
     ...
     {1.25,0.265,0.0232,0.0232,0.0468});
 
-drone1_initStates = [0,0,0, ... % X, Y, Z
-    0,0,0, ...                  % dX, dY, dZ
-    0,0,0, ...                  % Eular angles phi, theta, psi
-    0,0,0];                      % p, q, r
-
+drone1_initStates = [0, 0, -5, ...      % x, y, z
+    0, 0, 0, ...                        % dx, dy, dz
+    0, 0, 0, ...                        % phi, theta, psi
+    0, 0, 0]';  
 drone1_initInputs = [0,0,0,0]'; % u1, u2, u3, u4 (T, M1, M2, M3)
 
 drone1_body = [ 0.265,      0,     0, 1; ...
@@ -61,13 +60,13 @@ zlabel('Z[m]');
 
 hold(gca, 'on');
 drone1_state = drone1.GetState();
-wHb = [RPY2Rot(drone1_state(7:9))' drone1_state(1:3)'; 0 0 0 1]; % Homogenious 4x4 matrix
+wHb = [RPY2Rot(drone1_state(7:9))' drone1_state(1:3); 0 0 0 1]; % Homogenious 4x4 matrix
 
 drone1_world = wHb * drone1_body;
 drone1_atti = drone1_world(1:3,:);
 
-fig1_ARM13 = plot3(gca, drone1_atti(1,[1 3]), drone1_atti(2,[1 3]), drone1_atti(3,[1 3]), '-ro', 'MarkerSize',5);
-fig1_ARM24 = plot3(gca, drone1_atti(1,[2 4]), drone1_atti(2,[2 4]), drone1_atti(3,[2 4]), '-bo', 'MarkerSize',5);
+fig1_ARM13 = plot3(gca, drone1_atti(1,[1 3]), drone1_atti(2,[1 3]), drone1_atti(3,[1 3]), '-ro', 'MarkerSize',5, 'LineWidth',1.5);
+fig1_ARM24 = plot3(gca, drone1_atti(1,[2 4]), drone1_atti(2,[2 4]), drone1_atti(3,[2 4]), '-bo', 'MarkerSize',5 ,'LineWidth',1.5);
 fig1_payload = plot3(gca, drone1_atti(1,[5 6]), drone1_atti(2,[5 6]), drone1_atti(3,[5 6]), '-k', 'LineWidth',3);
 fig1_shadow = plot3(gca,0,0,0,'xk','LineWidth',3);
 
@@ -99,7 +98,7 @@ subplot(2,3,6)
 title('zdot[m/s]');
 
 %%
-commandSig(1) = 0.0;
+commandSig(1) = 10.0;
 commandSig(2) = 0.0;
 commandSig(3) = 0.0;
 commandSig(4) = 0.0;
@@ -112,27 +111,27 @@ for i = 1:simulationTime/0.01
 
     %% 3D plot 
     figure(1)
-    wHb = [RPY2Rot(drone1_state(7:9))' drone1_state(1:3)'; 0 0 0 1]; % Homogenious 4x4 matrix
+    wHb = [RPY2Rot(drone1_state(7:9))' drone1_state(1:3); 0 0 0 1]; % Homogenious 4x4 matrix
 
     drone1_world = wHb * drone1_body;
     drone1_atti = drone1_world(1:3,:);
 
-    set(fig_ARM13, ...
+    set(fig1_ARM13, ...
         'xData', drone1_atti(1, [1 3]),...
         'yData', drone1_atti(2, [1 3]),...
         'zData', drone1_atti(3, [1 3]));
-    set(fig_ARM24, ...
+    set(fig1_ARM24, ...
         'xData', drone1_atti(1, [2 4]),...
         'yData', drone1_atti(2, [2 4]),...
         'zData', drone1_atti(3, [2 4]));
-    set(fig_payload, ...
+    set(fig1_payload, ...
         'xData', drone1_atti(1, [5 6]),...
         'yData', drone1_atti(2, [5 6]),...
         'zData', drone1_atti(3, [5 6]));
-    set(fig_shadow, ...
+    set(fig1_shadow, ...
         'xData', drone1_state(1),...
         'yData', drone1_state(2),...
-        'zData', drone1_atti(3));
+        'zData', drone1_state(3));
 
     figure(2);
     subplot(2,3,1)
