@@ -32,9 +32,9 @@ drone1_gains = containers.Map({ ...
                             'P_psi','I_psi','D_psi',...
                             'P_zdot','I_zdot','D_zdot'}, ...
                             { ...
-                            0.0, 0.0, 0.0, ...
-                            0.0, 0.0, 0.0, ...
-                            0.0, 0.0, 0.0, ...
+                            0.2, 0.0, 0.15, ...
+                            0.2, 0.0, 0.15, ...
+                            0.4, 0.0, 0.3, ...
                             0.0, 0.0, 0.0, ...
                             });
 simulationTime = 2;
@@ -96,12 +96,13 @@ grid on;
 hold on;
 subplot(2,3,6)
 title('zdot[m/s]');
-
+grid on;
+hold on;
 %%
-commandSig(1) = 10.0;
-commandSig(2) = 0.0;
-commandSig(3) = 0.0;
-commandSig(4) = 0.0;
+commandSig(1) = 10.0 * D2R;
+commandSig(2) = -10.0 * D2R;
+commandSig(3) = 30.0 * D2R;
+commandSig(4) = 1.0;
 
 for i = 1:simulationTime/0.01
     drone1.AttitudeCtrl(commandSig);
@@ -131,7 +132,7 @@ for i = 1:simulationTime/0.01
     set(fig1_shadow, ...
         'xData', drone1_state(1),...
         'yData', drone1_state(2),...
-        'zData', drone1_state(3));
+        'zData', 0);
 
     figure(2);
     subplot(2,3,1)
@@ -141,11 +142,11 @@ for i = 1:simulationTime/0.01
     subplot(2,3,3)
         plot(i/100, drone1_state(9)*R2D, '.');
     subplot(2,3,4)
-        plot(i/100, drone1_state(1)*R2D, '.');
+        plot(i/100, drone1_state(1), '.');
     subplot(2,3,5)
-        plot(i/100, drone1_state(2)*R2D, '.');
+        plot(i/100, drone1_state(2), '.');
     subplot(2,3,6)
-        plot(i/100, drone1_state(3)*R2D, '.');
+        plot(i/100, drone1_state(6), '.');
 
     if (drone1_state(3) >= 0)
         msgbox('Crashed!','Error','error');
