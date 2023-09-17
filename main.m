@@ -32,8 +32,8 @@ drone1_gains = containers.Map({ ...
                             'P_psi','I_psi','D_psi',...
                             'P_zdot','I_zdot','D_zdot'}, ...
                             { ...
-                            0.2, 0.0, 0.15, ...
-                            0.2, 0.0, 0.15, ...
+                            0.1, 0.0, 0.15, ...
+                            0.1, 0.0, 0.15, ...
                             0.4, 0.0, 0.3, ...
                             0.0, 0.0, 0.0, ...
                             });
@@ -99,10 +99,10 @@ title('zdot[m/s]');
 grid on;
 hold on;
 %%
-commandSig(1) = 10.0 * D2R;
-commandSig(2) = -10.0 * D2R;
-commandSig(3) = 30.0 * D2R;
-commandSig(4) = 1.0;
+commandSig(1) = 10.0 * D2R; % phi_des
+commandSig(2) = 0.0 * D2R; % theta_des
+commandSig(3) = 0.0 * D2R; % psi_des
+commandSig(4) = 10.0; % zdot_des
 
 for i = 1:simulationTime/0.01
     drone1.AttitudeCtrl(commandSig);
@@ -111,7 +111,7 @@ for i = 1:simulationTime/0.01
     drone1_state = drone1.GetState();
 
     %% 3D plot 
-    figure(1)
+%     figure(1)
     wHb = [RPY2Rot(drone1_state(7:9))' drone1_state(1:3); 0 0 0 1]; % Homogenious 4x4 matrix
 
     drone1_world = wHb * drone1_body;

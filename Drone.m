@@ -166,10 +166,6 @@ classdef Drone < handle
         end
         
         function obj = AttitudeCtrl(obj, refSig)
-            % obj.u(1) = obj.m * obj.g;
-            % obj.u(2) = 0.0;
-            % obj.u(3) = 0.0;
-            % obj.u(4) = 0.0;
 
             obj.phi_des = refSig(1);
             obj.theta_des = refSig(2);
